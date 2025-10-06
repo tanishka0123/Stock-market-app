@@ -4,8 +4,12 @@ import { useForm } from "react-hook-form";
 import { Button } from "@/components/ui/button";
 import InputField from "@/components/forms/InputField";
 import FooterLink from "@/components/forms/FooterLink";
+import { signInWithEmail } from "@/lib/actions/auth.actions";
+import { toast } from "sonner";
+import { useRouter } from "next/navigation";
 
 const SignIn = () => {
+  const router = useRouter();
   const {
     register,
     handleSubmit,
@@ -19,11 +23,25 @@ const SignIn = () => {
   });
 
   const onSubmit = async (data: SignInFormData) => {
-    try {
-    } catch (e) {
-      console.error(e);
-    }
-  };
+      try {
+        const result = await signInWithEmail(data);
+  
+        if (result.success) {
+          toast.success("Sign in successful!");
+          router.push("/");
+        } else {
+          toast.error("Sign in failed", {
+            description: result.error || "Invalid credentials.",
+          });
+        }
+      } catch (e) {
+        console.error("Sign in error:", e);
+        toast.error("Sign in failed", {
+          description:
+            e instanceof Error ? e.message : "An error occurred in sign in.",
+        });
+      }
+    };
 
   return (
     <>
@@ -33,6 +51,7 @@ const SignIn = () => {
         <InputField
           name="email"
           label="Email"
+          type="email"
           placeholder="contact@jsmastery.com"
           register={register}
           error={errors.email}
