@@ -36,7 +36,6 @@ const SignUp = () => {
   });
 
   const onSubmit = async (data: SignUpFormData) => {
-    console.log("✅ Form data:", data);
     try {
       const result = await signUpWithEmail(data);
 
@@ -57,15 +56,11 @@ const SignUp = () => {
     }
   };
 
-  const onError = (errors: any) => {
-    console.log("❌ Validation errors:", errors);
-  };
-
   return (
     <>
       <h1 className="form-title">Sign Up & Personalize</h1>
 
-      <form onSubmit={handleSubmit(onSubmit, onError)} className="space-y-5">
+      <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
         <InputField
           name="fullName"
           label="Full Name"
